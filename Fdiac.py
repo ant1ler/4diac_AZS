@@ -15,6 +15,7 @@ class MovablePolygon(QtWidgets.QGraphicsPolygonItem):
         self.label.setFont(QtGui.QFont("Arial", 12))
         self.update_label_position()
 
+
     def itemChange(self, change, value):
         if change == QtWidgets.QGraphicsItem.GraphicsItemChange.ItemPositionChange:
             self.update_label_position()
@@ -25,6 +26,37 @@ class MovablePolygon(QtWidgets.QGraphicsPolygonItem):
         rect = self.boundingRect()
         self.label.setPos(rect.center() - QtCore.QPointF(self.label.boundingRect().width() / 2,
                                                          self.label.boundingRect().height() / 2))
+
+        rect = self.boundingRect()
+
+        self.label.setPos(rect.center() - QtCore.QPointF(self.label.boundingRect().width() / 2,
+
+                                                         self.label.boundingRect().height() / 2))
+
+    def contextMenuEvent(self, event):
+        context_menu = QtWidgets.QMenu()
+        # Создаем действия для контекстного меню
+        action_edit = context_menu.addAction("Редактировать")
+        action_delete = context_menu.addAction("Удалить")
+        # Подключаем действия к слотам
+        action_edit.triggered.connect(self.edit_polygon)
+        action_delete.triggered.connect(self.delete_polygon)
+        # Выполняем контекстное меню
+        context_menu.exec(event.screenPos())
+
+    def edit_polygon(self):
+        # Логика для редактирования многоугольника
+
+        print("Редактировать многоугольник")
+
+    def delete_polygon(self):
+        # Логика для удаления многоугольника
+        print("Удалить многоугольник")
+        self.scene().removeItem(self)
+        del self
+
+
+
 
 
 class Ui_MainWindow(object):
@@ -83,6 +115,18 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        MainWindow.keyPressEvent = self.keyPressEvent  # Подключаем обработчик нажатий клавиш
+
+    def keyPressEvent(self, event):
+        if event.key() == QtCore.Qt.Key.Key_Delete:
+            selected_items = self.scene.selectedItems()  # Получаем выбранные элементы
+            for item in selected_items:
+                if isinstance(item, MovablePolygon):  # Проверяем, является ли элемент многоугольником
+                    self.scene.removeItem(item)  # Удаляем элемент из сцены
+                    del item  # Освобождаем память
+
+
+
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -117,6 +161,10 @@ class Ui_MainWindow(object):
         # Create a movable polygon item with a numbered label
         polygon_item = MovablePolygon(polygon, numbered_label)
         self.scene.addItem(polygon_item)
+
+
+
+
 
 
 if __name__ == "__main__":
