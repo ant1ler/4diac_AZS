@@ -1,4 +1,4 @@
-from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class MovablePolygon(QtWidgets.QGraphicsPolygonItem):
@@ -6,8 +6,8 @@ class MovablePolygon(QtWidgets.QGraphicsPolygonItem):
         super().__init__(polygon)
         self.setBrush(QtGui.QBrush(QtGui.QColor(255, 255, 255)))
         self.setPen(QtGui.QPen(QtGui.QColor(0, 0, 0), 2))
-        self.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
-        self.setFlag(QtWidgets.QGraphicsItem.GraphicsItemFlag.ItemIsSelectable)
+        self.setFlag(QtWidgets.QGraphicsItem.ItemIsMovable)
+        self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable)
 
         # Create label and set it as a child of this polygon item
         self.label = QtWidgets.QGraphicsTextItem(label_text, self)
@@ -17,7 +17,7 @@ class MovablePolygon(QtWidgets.QGraphicsPolygonItem):
 
 
     def itemChange(self, change, value):
-        if change == QtWidgets.QGraphicsItem.GraphicsItemChange.ItemPositionChange:
+        if change == QtWidgets.QGraphicsItem.ItemPositionChange:
             self.update_label_position()
         return super().itemChange(change, value)
 
@@ -101,11 +101,11 @@ class Ui_MainWindow(object):
         self.statusbar = QtWidgets.QStatusBar(parent=MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
-        self.actionOpen = QtGui.QAction(parent=MainWindow)
+        self.actionOpen = QtWidgets.QAction(parent=MainWindow)
         self.actionOpen.setObjectName("actionOpen")
-        self.actionSave = QtGui.QAction(parent=MainWindow)
+        self.actionSave = QtWidgets.QAction(parent=MainWindow)
         self.actionSave.setObjectName("actionSave")
-        self.actionSettings = QtGui.QAction(parent=MainWindow)
+        self.actionSettings = QtWidgets.QAction(parent=MainWindow)
         self.actionSettings.setObjectName("actionSettings")
         self.menuFile.addAction(self.actionOpen)
         self.menuFile.addAction(self.actionSave)
@@ -139,7 +139,7 @@ class Ui_MainWindow(object):
 
     def on_item_clicked(self, item):
         label_text = item.text()
-        if label_text not in self.counter:
+        if label_text not in self .counter:
             self.counter[label_text] = 0
         self.counter[label_text] += 1
         numbered_label = f"{label_text}_{self.counter[label_text]}"
@@ -175,4 +175,4 @@ if __name__ == "__main__":
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
     MainWindow.show()
-    sys.exit(app.exec())
+    sys.exit(app.exec_())  # Используйте exec_() для PyQt5
